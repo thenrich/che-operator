@@ -128,6 +128,10 @@ if ! grep -q "value: quay.io/eclipse/che-dashboard:$RELEASE" $filename; then
     echo "[ERROR] Unable to find ubi8_minimal image in the $filename"; exit 1
   fi
 
+  if ! grep -q "value: $RELATED_IMAGE_dependent_service_waiter" $filename; then
+    echo "[ERROR] Unable to find ubi8_minimal image in the $filename"; exit 1
+  fi
+
   # use ${RELEASE} instead of master
   wget https://raw.githubusercontent.com/eclipse-che/che-server/${RELEASE}/assembly/assembly-wsmaster-war/src/main/webapp/WEB-INF/classes/che/che.properties -q -O /tmp/che.properties
 

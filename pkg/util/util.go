@@ -627,3 +627,16 @@ func GetCheURL(cheCluster *orgv1.CheCluster) string {
 	}
 	return cheUrl
 }
+
+// "addresses": [ ... ]
+// { ... }
+func GetPodWaitCommand(serviceName string) string {
+	return fmt.Sprintf(`set -e
+unset addresses
+until [ ! -z $addresses ]; do
+	echo "waiting for %s to be ready...";
+	sleep 5;
+	endpoints=$(curl -s --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes.default/api/v1/namespaces/$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)/endpoints/%s);
+	addresses=$(echo $endpoints | tr '\n' ' ' | sed -n 's|.*"addresses":[[:space:]]\[\([^]]*\)\].*|\1|p' | sed -n 's|[[:space:]][{]\(.*\)[[:space:]][}]|\1|p')
+done;`, serviceName, serviceName)
+}

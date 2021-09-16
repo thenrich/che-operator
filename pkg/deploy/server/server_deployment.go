@@ -350,6 +350,38 @@ func (s Server) getDeploymentSpec() (*appsv1.Deployment, error) {
 		}
 	}
 
+	if !s.deployContext.CheCluster.Spec.Database.ExternalDb {
+		dependentServiceWaiterImage := deploy.DefaultDependentServiceWaiterImage(s.deployContext.CheCluster)
+		deployment.Spec.Template.Spec.InitContainers = []corev1.Container{
+			{
+				Name:            "wait-for-db",
+				Image:           dependentServiceWaiterImage,
+				ImagePullPolicy: corev1.PullPolicy(deploy.DefaultPullPolicyFromDockerImage(dependentServiceWaiterImage)),
+				Args: []string{
+					"/bin/sh",
+					"-c",
+					util.GetPodWaitCommand("postgres"),
+				},
+			},
+		}
+	}
+
+	if !s.deployContext.CheCluster.Spec.Auth.ExternalIdentityProvider {
+		dependentServiceWaiterImage := deploy.DefaultDependentServiceWaiterImage(s.deployContext.CheCluster)
+		deployment.Spec.Template.Spec.InitContainers = []corev1.Container{
+			{
+				Name:            "wait-for-identity-provider",
+				Image:           dependentServiceWaiterImage,
+				ImagePullPolicy: corev1.PullPolicy(deploy.DefaultPullPolicyFromDockerImage(dependentServiceWaiterImage)),
+				Args: []string{
+					"/bin/sh",
+					"-c",
+					util.GetPodWaitCommand("keycloak"),
+				},
+			},
+		}
+	}
+
 	return deployment, nil
 }
 
