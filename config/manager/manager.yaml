@@ -93,7 +93,7 @@ spec:
               value: quay.io/openshift/origin-kube-rbac-proxy:4.7
             - name: RELATED_IMAGE_gateway_header_sidecar
               value: quay.io/che-incubator/header-rewrite-proxy:latest
-            - name: RELATED_IMAGE_dependent_service_waiter
+            - name: RELATED_IMAGE_endpoint_monitor_image
               value: registry.access.redhat.com/ubi8-minimal:8.4-208
             - name: CHE_FLAVOR
               value: che
@@ -115,6 +115,8 @@ spec:
               value: ca-certs
             - name: MAX_CONCURRENT_RECONCILES
               value: "1"
+            - name: CHE_ENDPOINT_MONITOR
+              value: "false"
           livenessProbe:
             httpGet:
               path: /healthz

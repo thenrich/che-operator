@@ -716,21 +716,25 @@ func GetSpecKeycloakDeployment(
 		},
 	}
 
-	// if !deployContext.CheCluster.Spec.Database.ExternalDb {
-	// 	dependentServiceWaiterImage := deploy.DefaultDependentServiceWaiterImage(deployContext.CheCluster)
-	// 	deployment.Spec.Template.Spec.InitContainers = []corev1.Container{
-	// 		{
-	// 			Name:            "wait-for-db",
-	// 			Image:           dependentServiceWaiterImage,
-	// 			ImagePullPolicy: corev1.PullPolicy(deploy.DefaultPullPolicyFromDockerImage(dependentServiceWaiterImage)),
-	// 			Args: []string{
-	// 				"/bin/sh",
-	// 				"-c",
-	// 				util.GetPodWaitCommand("postgres"),
-	// 			},
-	// 		},
-	// 	}
-	// }
+	if deploy.IsEndpointMonitorConfigured(deployContext.CheCluster) {
+		if !deployContext.CheCluster.Spec.Database.ExternalDb {
+			endpointWatcherImage := deploy.DefaultEndpointWatcherImage(deployContext.CheCluster)
+			imagePullPolicy := corev1.PullPolicy(deploy.DefaultPullPolicyFromDockerImage(endpointWatcherImage))
+
+			deployment.Spec.Template.Spec.InitContainers = []corev1.Container{
+				{
+					Name:            "wait-for-postgres",
+					Image:           endpointWatcherImage,
+					ImagePullPolicy: imagePullPolicy,
+					Args: []string{
+						"/bin/sh",
+						"-c",
+						util.GetPodWaitCommand("postgres"),
+					},
+				},
+			}
+		}
+	}
 
 	return deployment, nil
 }

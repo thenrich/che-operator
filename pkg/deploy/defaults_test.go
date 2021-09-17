@@ -30,7 +30,7 @@ func TestDefaultFromEnv(t *testing.T) {
 	pluginRegistryImageTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_plugin_registry"))
 	devfileRegistryImageTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_devfile_registry"))
 	pvcJobsImageTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_pvc_jobs"))
-	defaultDependentServiceWaiterImage := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_dependent_service_waiter"))
+	defaultEndpointMonitorImageTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_endpoint_monitor_image"))
 	postgresImageTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_postgres"))
 	keycloakImageTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_keycloak"))
 	brokerMetadataTest := os.Getenv(util.GetArchitectureDependentEnv("RELATED_IMAGE_che_workspace_plugin_broker_metadata"))
@@ -67,8 +67,8 @@ func TestDefaultFromEnv(t *testing.T) {
 		t.Errorf("Expected %s but was %s", pvcJobsImageTest, DefaultPvcJobsImage(cheCluster))
 	}
 
-	if DefaultDependentServiceWaiterImage(cheCluster) != defaultDependentServiceWaiterImage {
-		t.Errorf("Expected %s but was %s", defaultDependentServiceWaiterImage, DefaultDependentServiceWaiterImage(cheCluster))
+	if DefaultEndpointWatcherImage(cheCluster) != defaultEndpointMonitorImageTest {
+		t.Errorf("Expected %s but was %s", defaultEndpointMonitorImageTest, DefaultEndpointWatcherImage(cheCluster))
 	}
 
 	if DefaultPostgresImage(cheCluster) != postgresImageTest {

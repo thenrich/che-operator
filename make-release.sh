@@ -128,7 +128,7 @@ if ! grep -q "value: quay.io/eclipse/che-dashboard:$RELEASE" $filename; then
     echo "[ERROR] Unable to find ubi8_minimal image in the $filename"; exit 1
   fi
 
-  if ! grep -q "value: $RELATED_IMAGE_dependent_service_waiter" $filename; then
+  if ! grep -q "value: $RELATED_IMAGE_endpoint_monitor_image" $filename; then
     echo "[ERROR] Unable to find ubi8_minimal image in the $filename"; exit 1
   fi
 

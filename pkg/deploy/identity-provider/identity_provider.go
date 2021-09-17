@@ -356,3 +356,11 @@ func ReconcileIdentityProvider(deployContext *deploy.DeployContext) (deleted boo
 	}
 	return false, nil
 }
+
+func SyncEndpointsMonitorPermissions(deployContext *deploy.DeployContext) (bool, error) {
+	if deploy.IsEndpointMonitorConfigured(deployContext.CheCluster) {
+		return delegateEndpointMonitorPermissions(deployContext)
+	}
+
+	return true, nil
+}

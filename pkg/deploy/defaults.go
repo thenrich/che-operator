@@ -35,7 +35,7 @@ var (
 	defaultDevfileRegistryImage                string
 	defaultCheTLSSecretsCreationJobImage       string
 	defaultPvcJobsImage                        string
-	defaultDependentServiceWaiterImage         string
+	defaultEndpointMonitorImage                string
 	defaultPostgresImage                       string
 	defaultKeycloakImage                       string
 	defaultSingleHostGatewayImage              string
@@ -176,7 +176,7 @@ func InitDefaultsFromFile(defaultsPath string) {
 	defaultPluginRegistryImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_plugin_registry"))
 	defaultDevfileRegistryImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_devfile_registry"))
 	defaultPvcJobsImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_pvc_jobs"))
-	defaultDependentServiceWaiterImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_dependent_service_waiter"))
+	defaultEndpointMonitorImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_endpoint_monitor_image"))
 	defaultPostgresImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_postgres"))
 	defaultKeycloakImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_keycloak"))
 	defaultSingleHostGatewayImage = util.GetDeploymentEnv(operatorDeployment, util.GetArchitectureDependentEnv("RELATED_IMAGE_single_host_gateway"))
@@ -237,6 +237,10 @@ func DefaultServerTrustStoreConfigMapName() string {
 	return getDefaultFromEnv("CHE_SERVER_TRUST_STORE_CONFIGMAP_NAME")
 }
 
+func IsEndpointMonitorConfigured(cr *orgv1.CheCluster) bool {
+	return os.Getenv("RELATED_IMAGE_endpoint_monitor_image") == "true"
+}
+
 func DefaultCheFlavor(cr *orgv1.CheCluster) string {
 	return util.GetValue(cr.Spec.Server.CheFlavor, getDefaultFromEnv("CHE_FLAVOR"))
 }
@@ -285,8 +289,8 @@ func DefaultPvcJobsImage(cr *orgv1.CheCluster) string {
 	return patchDefaultImageName(cr, defaultPvcJobsImage)
 }
 
-func DefaultDependentServiceWaiterImage(cr *orgv1.CheCluster) string {
-	return patchDefaultImageName(cr, defaultDependentServiceWaiterImage)
+func DefaultEndpointWatcherImage(cr *orgv1.CheCluster) string {
+	return patchDefaultImageName(cr, defaultEndpointMonitorImage)
 }
 
 func DefaultPostgresImage(cr *orgv1.CheCluster) string {
@@ -438,7 +442,7 @@ func InitDefaultsFromEnv() {
 	defaultPluginRegistryImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_plugin_registry"))
 	defaultDevfileRegistryImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_devfile_registry"))
 	defaultPvcJobsImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_pvc_jobs"))
-	defaultDependentServiceWaiterImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_dependent_service_waiter"))
+	defaultEndpointMonitorImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_endpoint_monitor_image"))
 	defaultPostgresImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_postgres"))
 	defaultKeycloakImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_keycloak"))
 	defaultSingleHostGatewayImage = getDefaultFromEnv(util.GetArchitectureDependentEnv("RELATED_IMAGE_single_host_gateway"))
