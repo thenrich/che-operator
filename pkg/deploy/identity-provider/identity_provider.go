@@ -33,6 +33,7 @@ var (
 	syncItems           = []func(*deploy.DeployContext) (bool, error){
 		syncService,
 		syncExposure,
+		SyncEndpointsMonitorPermissions,
 		SyncKeycloakDeploymentToCluster,
 		syncKeycloakResources,
 		syncOpenShiftIdentityProvider,

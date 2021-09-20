@@ -821,6 +821,10 @@ func (r *CheClusterReconciler) reconcileFinalizers(deployContext *deploy.DeployC
 		logrus.Error(err)
 	}
 
+	if _, err := identity_provider.RemoveEndpointMonitorPermissions(deployContext); err != nil {
+		logrus.Error(err)
+	}
+
 	if err := deploy.ReconcileConsoleLinkFinalizer(deployContext); err != nil {
 		logrus.Error(err)
 	}

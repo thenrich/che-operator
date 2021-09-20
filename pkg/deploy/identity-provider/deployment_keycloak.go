@@ -733,6 +733,8 @@ func GetSpecKeycloakDeployment(
 					},
 				},
 			}
+
+			deployment.Spec.Template.Spec.ServiceAccountName = KeckoakSA
 		}
 	}
 

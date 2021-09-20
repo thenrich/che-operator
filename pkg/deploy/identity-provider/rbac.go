@@ -57,17 +57,21 @@ func delegateEndpointMonitorPermissions(deployContext *deploy.DeployContext) (bo
 	return err == nil, err
 }
 
-func removeEndpointMonitorPermissions(deployContext *deploy.DeployContext) (bool, error) {
-	done, err := deploy.Delete(deployContext, types.NamespacedName{Name: getClusterRoleName(deployContext)}, &rbacv1.ClusterRole{})
-	if !done {
-		return false, err
+func RemoveEndpointMonitorPermissions(deployContext *deploy.DeployContext) (bool, error) {
+	if !deployContext.CheCluster.ObjectMeta.DeletionTimestamp.IsZero() {
+		done, err := deploy.Delete(deployContext, types.NamespacedName{Name: getClusterRoleName(deployContext)}, &rbacv1.ClusterRole{})
+		if !done {
+			return false, err
+		}
+
+		done, err = deploy.Delete(deployContext, types.NamespacedName{Name: getClusterRoleBindingName(deployContext)}, &rbacv1.ClusterRoleBinding{})
+		if !done {
+			return false, err
+		}
+
+		err = deploy.DeleteFinalizer(deployContext, ClusterPermissionsKeycloakFinalizer)
+		return err == nil, err
 	}
 
-	done, err = deploy.Delete(deployContext, types.NamespacedName{Name: getClusterRoleBindingName(deployContext)}, &rbacv1.ClusterRoleBinding{})
-	if !done {
-		return false, err
-	}
-
-	err = deploy.DeleteFinalizer(deployContext, ClusterPermissionsKeycloakFinalizer)
-	return err == nil, err
+	return true, nil
 }

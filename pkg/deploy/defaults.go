@@ -238,7 +238,7 @@ func DefaultServerTrustStoreConfigMapName() string {
 }
 
 func IsEndpointMonitorConfigured(cr *orgv1.CheCluster) bool {
-	return os.Getenv("RELATED_IMAGE_endpoint_monitor_image") == "true"
+	return os.Getenv("CHE_ENDPOINT_MONITOR") == "true"
 }
 
 func DefaultCheFlavor(cr *orgv1.CheCluster) string {
