@@ -13,10 +13,6 @@
 set -e
 set -x
 
-git tag -l --sort=creatordate | tail -n 2
-
 git remote add operator https://github.com/eclipse-che/che-operator.git
 git fetch operator -q
-
-git tag -l --sort=creatordate | tail -n 2
-
+git ls-remote  --sort='version:refname' --tags operator
