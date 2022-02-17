@@ -10,7 +10,7 @@
 //   Red Hat, Inc. - initial API and implementation
 //
 
-package v1
+package v2
 
 // Important: You must regenerate some generated code after modifying this file. At the root of the project:
 // Run `make generate`. It will perform required changes:
@@ -791,6 +791,7 @@ type CheClusterStatus struct {
 // +operator-sdk:csv:customresourcedefinitions:displayName="Eclipse Che instance Specification"
 // +operator-sdk:csv:customresourcedefinitions:order=0
 // +operator-sdk:csv:customresourcedefinitions:resources={{Ingress,v1},{Route,v1},{ConfigMap,v1},{Service,v1},{Secret,v1},{Deployment,apps/v1},{Role,v1},{RoleBinding,v1},{ClusterRole,v1},{ClusterRoleBinding,v1}}
+// +kubebuilder:storageversion
 type CheCluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -165,17 +165,9 @@ manifests: controller-gen add-license-download ## Generate WebhookConfiguration,
 	sed -i.bak '/---/d' "$(ECLIPSE_CHE_CRD_V1)"
 	rm -rf "$(ECLIPSE_CHE_CRD_V1).bak"
 
-	# remove v1alphav2 version from crd files
-	yq -rYi "del(.spec.versions[1])" "$(ECLIPSE_CHE_CRD_V1BETA1)"
-	yq -rYi "del(.spec.versions[1])" "$(ECLIPSE_CHE_CRD_V1)"
-
-	# remove .spec.subresources.status from crd v1beta1 files
+	# Remove some fields to make CRD v1beta1 compatible with OpenShift 3.11
 	yq -rYi ".spec.subresources.status = {}" "$(ECLIPSE_CHE_CRD_V1BETA1)"
-
-	# remove .spec.validation.openAPIV3Schema.type field
 	yq -rYi "del(.spec.validation.openAPIV3Schema.type)" "$(ECLIPSE_CHE_CRD_V1BETA1)"
-
-	# remove "required" attributes from v1beta1 crd files
 	$(MAKE) removeRequiredAttribute "filePath=$(ECLIPSE_CHE_CRD_V1BETA1)"
 
 	$(MAKE) add-license $$(find ./config/crd -not -path "./vendor/*" -name "*.yaml")
@@ -550,9 +542,8 @@ bundle: generate manifests kustomize ## Generate bundle manifests and metadata, 
 	# Example such annotation: +operator-sdk:csv:customresourcedefinitions:order=0
 	# Let's copy this sorted CRDs to the bundle cluster service version file.
 	BASE_CSV="config/manifests/bases/che-operator.clusterserviceversion.yaml"
-	CRD_API=$$(yq -c '.spec.customresourcedefinitions.owned' $${BASE_CSV})
+	CRD_API=$$(yq  '.spec.customresourcedefinitions.owned' $${BASE_CSV} | yq -r 'del(.[] | select(.version == "v2alpha1"))')
 	yq -riSY ".spec.customresourcedefinitions.owned = $$CRD_API" "$${NEW_CSV}"
-	yq -riSY "del(.spec.customresourcedefinitions.owned[] | select(.version == \"v2alpha1\"))" "$${NEW_CSV}"
 
 	# Format code.
 	yq -rY "." "$${NEW_CSV}" > "$${NEW_CSV}.old"

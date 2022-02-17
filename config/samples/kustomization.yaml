@@ -17,4 +17,5 @@ resources:
 # - org_v2alpha1_checluster.yaml
 # Uncomment to enable a devworkspace sample
 # - devworkspace_flattened_theia-nodejs.yaml
+# - org_v2_checluster.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

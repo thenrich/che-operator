@@ -22,6 +22,7 @@ import (
 
 	dwoApi "github.com/devfile/devworkspace-operator/apis/controller/v1alpha1"
 	dwr "github.com/devfile/devworkspace-operator/controllers/controller/devworkspacerouting"
+
 	"github.com/eclipse-che/che-operator/controllers/devworkspace"
 	"github.com/eclipse-che/che-operator/controllers/devworkspace/solver"
 
@@ -76,6 +77,7 @@ import (
 	networkingv1 "k8s.io/api/networking/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 
+	orgv2 "github.com/eclipse-che/che-operator/api/v2"
 	orgv2alpha1 "github.com/eclipse-che/che-operator/api/v2alpha1"
 	//+kubebuilder:scaffold:imports
 )
@@ -127,6 +129,7 @@ func init() {
 	// utilruntime.Must(orgv2alpha1.AddToScheme(scheme))
 
 	utilruntime.Must(orgv2alpha1.AddToScheme(scheme))
+	utilruntime.Must(orgv2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 	utilruntime.Must(admissionregistrationv1.AddToScheme(scheme))
@@ -316,6 +319,11 @@ func main() {
 		})
 	}
 
+	if err = (&orgv2.CheCluster{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "CheCluster")
+		os.Exit(1)
+	}
+	
 	// +kubebuilder:scaffold:builder
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

@@ -10,9 +10,9 @@
 #   Red Hat, Inc. - initial API and implementation
 #
 
-apiVersion: org.eclipse.che/v2alpha1
-kind: CheCluster
-metadata:
-  name: eclipse-che
-spec:
-  # Add fields here
+resources:
+# - manifests.yaml
+- service.yaml
+
+configurations:
+- kustomizeconfig.yaml

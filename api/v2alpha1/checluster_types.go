@@ -178,6 +178,7 @@ type CheClusterStatusV2Alpha1 struct {
 // CheCluster is the configuration of the CheCluster layer of Devworkspace.
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
+// +kubebuilder:skipversion
 // +kubebuilder:resource:path=checlusters,scope=Namespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +operator-sdk:csv:customresourcedefinitions:displayName="Eclipse Che Cluster"

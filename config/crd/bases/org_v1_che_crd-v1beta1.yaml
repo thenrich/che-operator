@@ -25,6 +25,8 @@ spec:
     plural: checlusters
     singular: checluster
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       description: The `CheCluster` custom resource allows defining and managing a
@@ -1172,9 +1174,10 @@ spec:
   versions:
     - name: v1
       served: true
+      storage: false
+    - name: v2
+      served: true
       storage: true
-  subresources:
-    status: {}
 status:
   acceptedNames:
     kind: ""
